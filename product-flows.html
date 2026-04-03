@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Command — Product Flows v3.0</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080810; --s1: #0d0d1a; --s2: #111122; --s3: #16162a;
+      --blue: #3b82f6; --pink: #ec4899; --orange: #f97316;
+      --emerald: #10b981; --amber: #f59e0b; --cyan: #06b6d4; --violet: #a78bfa;
+      --text: #f0f4ff; --text2: #94a3b8; --text3: #6b7a9a; --text4: #4b5680;
+      --border: rgba(59,130,246,0.12); --border2: rgba(59,130,246,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: 260px;
+      min-height: 100vh;
+      background: var(--s1);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      padding: 28px 0 40px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border2);
+      margin-bottom: 20px;
+    }
+
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--pink));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(59,130,246,0.3);
+    }
+
+    .logo-text { font-weight: 900; font-size: 15px; line-height: 1.1; letter-spacing: -0.02em; }
+    .logo-text span { background: linear-gradient(135deg, var(--blue), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .nav-group-label {
+      font-size: 9px; font-weight: 800; color: var(--text4);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 10px 20px 6px;
+    }
+
+    .nav-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 20px; cursor: pointer;
+      color: var(--text3); font-size: 13px; font-weight: 500;
+      text-decoration: none; transition: all 150ms ease;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-link:hover { color: var(--text); background: rgba(59,130,246,0.05); }
+    .nav-link.active { color: var(--blue); border-left-color: var(--blue); background: rgba(59,130,246,0.07); font-weight: 700; }
+
+    .nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Main Content ── */
+    main { margin-left: 260px; flex: 1; padding: 0; max-width: calc(100vw - 260px); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 64px 64px 56px;
+      background: linear-gradient(180deg, rgba(59,130,246,0.05) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 20px; padding: 4px 12px; font-size: 11px;
+      font-weight: 700; color: var(--blue); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 52px; font-weight: 900; letter-spacing: -0.04em;
+      line-height: 1.05; margin-bottom: 16px;
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--pink) 50%, var(--violet) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero p { font-size: 17px; color: var(--text2); max-width: 700px; line-height: 1.65; margin-bottom: 36px; }
+
+    .hero-stats {
+      display: flex; gap: 32px; flex-wrap: wrap;
+    }
+
+    .hero-stat { display: flex; flex-direction: column; }
+    .hero-stat-n { font-size: 32px; font-weight: 900; font-family: 'Space Mono', monospace; letter-spacing: -0.03em; }
+    .hero-stat-l { font-size: 12px; color: var(--text3); font-weight: 600; margin-top: 2px; }
+
+    /* ── Section ── */
+    .section {
+      padding: 56px 64px;
+      border-bottom: 1px solid var(--border2);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+
+    .section-header { margin-bottom: 40px; }
+    .section-header h2 { font-size: 30px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .section-header p { font-size: 14px; color: var(--text2); max-width: 740px; line-height: 1.6; }
+
+    /* ── Diagram cards ── */
+    .diagram-card {
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+    }
+
+    .diagram-card-header {
+      padding: 14px 20px; border-bottom: 1px solid var(--border2);
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .diagram-card-header .icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+
+    .diagram-card-header h3 { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+    .diagram-card-header p { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+    .diagram-card-body { padding: 24px; overflow-x: auto; }
+
+    .diagram-card svg { max-width: 100%; }
+
+    /* ── Grid layouts ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    /* ── Persona cards ── */
+    .persona-card {
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
+    }
+
+    .persona-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+
+    .persona-card.p1::before { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+    .persona-card.p2::before { background: linear-gradient(90deg, var(--pink), var(--violet)); }
+    .persona-card.p3::before { background: linear-gradient(90deg, var(--amber), var(--orange)); }
+
+    .persona-avatar {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px;
+    }
+
+    .persona-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .persona-card .desc { font-size: 12px; color: var(--text3); margin-bottom: 16px; line-height: 1.5; }
+
+    .persona-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; margin-right: 4px; margin-bottom: 6px;
+    }
+
+    .persona-journey { margin-top: 16px; }
+    .persona-journey-step {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-top: 1px solid var(--border2);
+    }
+    .step-num {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; margin-top: 1px;
+    }
+    .step-text { font-size: 12px; color: var(--text3); line-height: 1.4; }
+    .step-text strong { color: var(--text); font-weight: 700; }
+
+    /* ── Feature layer cards ── */
+    .layer-card {
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .layer-header { display: flex; align-items: center; gap: 10px; }
+    .layer-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .layer-header h3 { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .layer-header .count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 5px; margin-left: auto; }
+
+    .feature-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text2); margin: 2px;
+    }
+
+    .feature-pill .dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* ── Flow steps ── */
+    .flow-steps {
+      display: flex; gap: 0; align-items: center; flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; flex-direction: column; min-width: 130px;
+      position: relative;
+    }
+
+    .flow-step .step-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text4); margin-bottom: 4px; }
+    .flow-step .step-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .flow-step .step-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
+
+    .flow-arrow {
+      color: var(--text4); font-size: 18px; padding: 0 6px; flex-shrink: 0;
+    }
+
+    /* ── User Journey Timeline ── */
+    .journey-track {
+      position: relative; padding-left: 28px; margin-top: 8px;
+    }
+
+    .journey-track::before {
+      content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border);
+    }
+
+    .journey-item {
+      position: relative; padding: 12px 16px; margin-bottom: 8px;
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .journey-item::before {
+      content: ''; position: absolute; left: -22px; top: 50%;
+      transform: translateY(-50%);
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+
+    .journey-item.p1::before { background: var(--blue); }
+    .journey-item.p2::before { background: var(--pink); }
+    .journey-item.p3::before { background: var(--amber); }
+
+    .journey-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .journey-item-header h4 { font-size: 13px; font-weight: 700; }
+    .journey-item p { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+    /* ── Status badges ── */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 700;
+    }
+    .status-badge.done { background: rgba(16,185,129,0.15); color: var(--emerald); }
+    .status-badge.progress { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .status-badge.todo { background: rgba(107,122,154,0.15); color: var(--text3); }
+    .status-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+
+    /* ── AI Flow ── */
+    .ai-grid {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden;
+    }
+
+    .ai-input, .ai-output {
+      background: var(--s2); padding: 20px;
+    }
+
+    .ai-center {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--s1); padding: 24px; position: relative;
+    }
+
+    .ai-badge {
+      background: linear-gradient(135deg, var(--pink), var(--violet));
+      border-radius: 14px; padding: 14px 20px; text-align: center;
+      box-shadow: 0 0 40px rgba(236,72,153,0.2);
+    }
+
+    .ai-badge .model { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .ai-badge .name { font-size: 15px; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
+
+    .ai-item {
+      display: flex; align-items: center; gap: 8px; padding: 7px 0;
+      border-bottom: 1px solid var(--border2); font-size: 12px;
+    }
+    .ai-item:last-child { border-bottom: none; }
+    .ai-item .icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+
+    /* ── Feature matrix table ── */
+    .matrix-table { width: 100%; border-collapse: collapse; }
+    .matrix-table th {
+      text-align: left; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--text4);
+      padding: 10px 16px; border-bottom: 1px solid var(--border);
+      background: var(--s1);
+    }
+    .matrix-table td { padding: 10px 16px; border-bottom: 1px solid var(--border2); font-size: 12px; }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-table tr:hover td { background: rgba(59,130,246,0.03); }
+    .matrix-table .view-id { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--cyan); }
+    .matrix-table .check { color: var(--emerald); font-size: 13px; }
+    .matrix-table .dash { color: var(--text4); }
+
+    /* ── Priority Matrix ── */
+    .priority-matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .priority-quadrant {
+      background: var(--s2);
+      padding: 20px;
+      min-height: 200px;
+    }
+
+    .priority-quadrant h4 {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .priority-quadrant ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .priority-quadrant li {
+      font-size: 11px;
+      color: var(--text3);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .priority-quadrant li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+    }
+
+    /* ── Implementation Roadmap ── */
+    .roadmap {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .roadmap-phase {
+      position: relative;
+      margin-bottom: 32px;
+      background: var(--s2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .roadmap-phase::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 24px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 3px solid var(--bg);
+    }
+
+    .roadmap-phase.done::before { background: var(--emerald); }
+    .roadmap-phase.progress::before { background: var(--blue); }
+    .roadmap-phase.todo::before { background: var(--text4); }
+
+    .roadmap-phase h4 {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .roadmap-phase p {
+      font-size: 12px;
+      color: var(--text3);
+      margin-bottom: 12px;
+    }
+
+    .roadmap-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .roadmap-task {
+      font-size: 11px;
+      color: var(--text2);
+      padding: 6px 10px;
+      background: var(--s1);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .roadmap-task input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--blue);
+    }
+
+    /* ── Gap Analysis Cards ── */
+    .gap-card {
+      background: var(--s2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--amber);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .gap-card.critical { border-left-color: var(--red); }
+    .gap-card.high { border-left-color: var(--orange); }
+    .gap-card.medium { border-left-color: var(--amber); }
+
+    .gap-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .gap-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .gap-impact {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .gap-impact.high { background: rgba(239,68,68,0.15); color: var(--red); }
+    .gap-impact.medium { background: rgba(245,158,11,0.15); color: var(--amber); }
+
+    .gap-description {
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.5;
+    }
+
+    /* ── Mermaid overrides ── */
+    .mermaid { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--text4); border-radius: 2px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .hero { padding: 40px 28px 36px; }
+      .section { padding: 40px 28px; }
+      .hero h1 { font-size: 36px; }
+      aside { width: 200px; }
+      main { margin-left: 200px; max-width: calc(100vw - 200px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ───────────────────────────────────────────── -->
+<aside>
+  <div class="sidebar-logo">
+    <div class="logo-mark">✦</div>
+    <div class="logo-text">Creator<br><span>Command</span></div>
+  </div>
+
+  <div class="nav-group-label">Overview</div>
+  <a class="nav-link active" href="#architecture">
+    <span class="nav-dot" style="background:#3b82f6"></span> Architecture
+  </a>
+  <a class="nav-link" href="#personas">
+    <span class="nav-dot" style="background:#ec4899"></span> User Personas
+  </a>
+  <a class="nav-link" href="#navigation">
+    <span class="nav-dot" style="background:#a78bfa"></span> Navigation Map
+  </a>
+  <a class="nav-link" href="#gaps">
+    <span class="nav-dot" style="background:#ef4444"></span> Gap Analysis
+  </a>
+
+  <div class="nav-group-label">User Flows</div>
+  <a class="nav-link" href="#onboarding">
+    <span class="nav-dot" style="background:#06b6d4"></span> Onboarding
+  </a>
+  <a class="nav-link" href="#content-flow">
+    <span class="nav-dot" style="background:#10b981"></span> Content Creation
+  </a>
+  <a class="nav-link" href="#production-flow">
+    <span class="nav-dot" style="background:#f97316"></span> Production Layer
+  </a>
+  <a class="nav-link" href="#monetize-flow">
+    <span class="nav-dot" style="background:#f59e0b"></span> Monetization
+  </a>
+  <a class="nav-link" href="#workspace-flow">
+    <span class="nav-dot" style="background:#a78bfa"></span> Workspace
+  </a>
+
+  <div class="nav-group-label">Intelligence</div>
+  <a class="nav-link" href="#ai-flow">
+    <span class="nav-dot" style="background:#ec4899"></span> AI Integration
+  </a>
+  <a class="nav-link" href="#growth-flow">
+    <span class="nav-dot" style="background:#3b82f6"></span> Growth Intelligence
+  </a>
+
+  <div class="nav-group-label">Implementation</div>
+  <a class="nav-link" href="#gaps">
+    <span class="nav-dot" style="background:#ef4444"></span> Audit v2 (F-01–F-10)
+  </a>
+  <a class="nav-link" href="#roadmap">
+    <span class="nav-dot" style="background:#10b981"></span> Sprint Roadmap
+  </a>
+  <a class="nav-link" href="#feature-matrix">
+    <span class="nav-dot" style="background:#6b7a9a"></span> Feature Matrix
+  </a>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────────────────── -->
+<main>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-tag">✦ Product Architecture Document v4.0</div>
+    <h1>Creator Command<br><span class="grad">Product Flows</span></h1>
+    <p>Complete user flows, feature architecture, AI integrations, gap analysis, and implementation roadmap for the Creator Command platform — the all-in-one operating system for content creators.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-n" style="color:#3b82f6">40+</span>
+        <span class="hero-stat-l">Total Views</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n" style="color:#ec4899">44</span>
+        <span class="hero-stat-l">Passing Tests</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n" style="color:#10b981">5</span>
+        <span class="hero-stat-l">Product Layers</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n" style="color:#a78bfa">381KB</span>
+        <span class="hero-stat-l">Bundle Size</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n" style="color:#f59e0b">4</span>
+        <span class="hero-stat-l">Sprints Remaining</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. ARCHITECTURE                                           -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2)">System Architecture</div>
+      <h2>Product Layer Architecture</h2>
+      <p>Creator Command is organized into 5 distinct layers, each serving a specific stage of the creator workflow. Data flows upward — lower layers feed intelligence to higher ones.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(59,130,246,0.1)">⬡</div>
+        <div><h3>System Architecture Overview</h3><p>How all 5 layers interconnect and feed data across the platform</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+graph TB
+    User["👤 Creator"]:::node
+
+    subgraph L1["⚡ Command Layer"]
+        CC["Command Center\n(Dashboard)"]:::blue
+        IE["Idea Engine\n(AI Ideation)"]:::blue
+    end
+
+    subgraph L2["✏️ Creation Layer"]
+        CAL["Content Calendar"]:::green
+        PL["Daily Planner"]:::green
+        ST["Creation Studio\n(7 Tabs)"]:::green
+        PP["Content Pipeline"]:::green
+    end
+
+    subgraph L3["📊 Intelligence Layer"]
+        AN["Analytics"]:::amber
+        TR["Trend Radar"]:::amber
+        DNA["Content DNA"]:::amber
+        BD["Brand Deals"]:::amber
+        INC["Income Tracker"]:::amber
+    end
+
+    subgraph L4["🎬 Production Layer"]
+        VB["Video Brief Studio"]:::orange
+        TL["Thumbnail Lab"]:::orange
+        CF["Clip Finder"]:::orange
+        BK["Brand Kit"]:::orange
+        CA["Channel Audit"]:::orange
+    end
+
+    subgraph L5["🗂️ Workspace Layer"]
+        INB["Smart Inbox"]:::violet
+        PM["Projects"]:::violet
+        SMT["Smart Tasks"]:::violet
+        CP["Client Portal"]:::violet
+    end
+
+    subgraph AI["🤖 AI Core"]
+        Claude["Claude Haiku 4.5"]:::pink
+    end
+
+    User --> L1
+    L1 --> L2
+    L2 --> L3
+    L3 --> L4
+    L4 --> L5
+    L1 & L2 & L3 & L4 --> AI
+    DNA --> Claude
+    Claude --> IE & ST & VB & CF & CA
+
+    classDef node fill:#111122,stroke:#3b82f6,color:#f0f4ff,rx:8
+    classDef blue fill:#111122,stroke:#3b82f6,color:#3b82f6
+    classDef green fill:#111122,stroke:#10b981,color:#10b981
+    classDef amber fill:#111122,stroke:#f59e0b,color:#f59e0b
+    classDef orange fill:#111122,stroke:#f97316,color:#f97316
+    classDef violet fill:#111122,stroke:#a78bfa,color:#a78bfa
+    classDef pink fill:#0d0d1a,stroke:#ec4899,color:#ec4899
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-top:24px">
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(59,130,246,0.1)">⚡</div>
+          <h3 style="color:#3b82f6">Command</h3>
+          <span class="layer-count" style="background:rgba(59,130,246,0.1);color:#3b82f6;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">2 views</span>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>Dashboard</span>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>Idea Engine</span>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>Quick Capture</span>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>⌘K Palette</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(16,185,129,0.1)">✏️</div>
+          <h3 style="color:#10b981">Creation</h3>
+          <span class="layer-count" style="background:rgba(16,185,129,0.1);color:#10b981;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">4 views</span>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#10b981"></span>Calendar</span>
+          <span class="feature-pill"><span class="dot" style="background:#10b981"></span>Planner</span>
+          <span class="feature-pill"><span class="dot" style="background:#10b981"></span>Studio (7 tabs)</span>
+          <span class="feature-pill"><span class="dot" style="background:#10b981"></span>Pipeline</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(245,158,11,0.1)">📊</div>
+          <h3 style="color:#f59e0b">Intelligence</h3>
+          <span class="layer-count" style="background:rgba(245,158,11,0.1);color:#f59e0b;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">8 views</span>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Analytics</span>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Trends</span>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Content DNA</span>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Brand Deals</span>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Goals</span>
+          <span class="feature-pill"><span class="dot" style="background:#f59e0b"></span>Income</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(249,115,22,0.1)">🎬</div>
+          <h3 style="color:#f97316">Production</h3>
+          <span class="layer-count" style="background:rgba(249,115,22,0.1);color:#f97316;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800">8 views</span>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Video Brief</span>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Thumbnail Lab</span>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Clip Finder</span>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Brand Kit</span>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Gear Guide</span>
+          <span class="feature-pill"><span class="dot" style="background:#f97316"></span>Channel Audit</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. PERSONAS                                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="personas">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">User Personas</div>
+      <h2>Who Creator Command Serves</h2>
+      <p>Three distinct personas, each with different entry points, goals, and primary feature usage patterns.</p>
+    </div>
+
+    <div class="grid-3">
+      <!-- Persona 1 -->
+      <div class="persona-card p1">
+        <div class="persona-avatar" style="background:rgba(59,130,246,0.1)">🚀</div>
+        <h3>The Growing Creator</h3>
+        <p class="desc">5K–500K followers. Posting 3–5×/week. Starting to monetize. Needs to systematize everything.</p>
+        <div>
+          <span class="persona-badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Primary Target</span>
+          <span class="persona-badge" style="background:rgba(16,185,129,0.1);color:#10b981">₹10K–₹3L/mo</span>
+        </div>
+        <div class="persona-journey">
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(59,130,246,0.15);color:#3b82f6">1</div>
+            <div class="step-text"><strong>Command Center</strong> — daily dashboard review</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(59,130,246,0.15);color:#3b82f6">2</div>
+            <div class="step-text"><strong>Content Pipeline</strong> — track production status</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(59,130,246,0.15);color:#3b82f6">3</div>
+            <div class="step-text"><strong>Video Brief + Studio</strong> — create content faster</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(59,130,246,0.15);color:#3b82f6">4</div>
+            <div class="step-text"><strong>Brand Deals</strong> — manage sponsorships</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Persona 2 -->
+      <div class="persona-card p2">
+        <div class="persona-avatar" style="background:rgba(236,72,153,0.1)">🌱</div>
+        <h3>The New Creator</h3>
+        <p class="desc">0–5K followers. Just starting out. Needs guidance on niche, gear, and first content strategy.</p>
+        <div>
+          <span class="persona-badge" style="background:rgba(236,72,153,0.1);color:#ec4899">Acquisition</span>
+          <span class="persona-badge" style="background:rgba(16,185,129,0.1);color:#10b981">₹0–₹10K/mo</span>
+        </div>
+        <div class="persona-journey">
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(236,72,153,0.15);color:#ec4899">1</div>
+            <div class="step-text"><strong>Niche Finder Quiz</strong> — discover focus area</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(236,72,153,0.15);color:#ec4899">2</div>
+            <div class="step-text"><strong>Gear Guide</strong> — get equipment recommendations</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(236,72,153,0.15);color:#ec4899">3</div>
+            <div class="step-text"><strong>Channel Audit</strong> — understand starting point</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(236,72,153,0.15);color:#ec4899">4</div>
+            <div class="step-text"><strong>Idea Engine</strong> — generate first content ideas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Persona 3 -->
+      <div class="persona-card p3">
+        <div class="persona-avatar" style="background:rgba(249,115,22,0.1)">🏢</div>
+        <h3>The Pro Creator / Agency</h3>
+        <p class="desc">500K+ followers or managing multiple client accounts. Needs team coordination and client visibility.</p>
+        <div>
+          <span class="persona-badge" style="background:rgba(249,115,22,0.1);color:#f97316">Enterprise</span>
+          <span class="persona-badge" style="background:rgba(16,185,129,0.1);color:#10b981">₹3L+/mo</span>
+        </div>
+        <div class="persona-journey">
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(249,115,22,0.15);color:#f97316">1</div>
+            <div class="step-text"><strong>Projects</strong> — manage campaigns</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(249,115,22,0.15);color:#f97316">2</div>
+            <div class="step-text"><strong>Smart Tasks</strong> — assign team work</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(249,115,22,0.15);color:#f97316">3</div>
+            <div class="step-text"><strong>Client Portal</strong> — share progress</div>
+          </div>
+          <div class="persona-journey-step">
+            <div class="step-num" style="background:rgba(249,115,22,0.15);color:#f97316">4</div>
+            <div class="step-text"><strong>Monetization</strong> — track all revenue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. GAP ANALYSIS                                           -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="gaps">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2)">Gap Analysis v2 · Audit</div>
+      <h2>10 Known Flaws — Prioritized</h2>
+      <p>Post-P0/P1/P2 architecture audit. Entitlements, code-splitting, and tests are now resolved. These are the open flaws remaining as of v4.0.</p>
+    </div>
+
+    <div class="priority-matrix">
+      <div class="priority-quadrant" style="border-bottom:1px solid var(--border);border-right:1px solid var(--border)">
+        <h4 style="color:#ef4444">
+          <span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span>
+          P0 · Blockers (Sprint 6)
+        </h4>
+        <ul>
+          <li>F-01 · localStorage-only (no cloud)</li>
+          <li>F-02 · Demo paywall, no real billing</li>
+          <li>F-10 · No real auth (UI-only SSO)</li>
+        </ul>
+      </div>
+      <div class="priority-quadrant" style="border-bottom:1px solid var(--border)">
+        <h4 style="color:#f97316">
+          <span style="width:8px;height:8px;background:#f97316;border-radius:50%;display:inline-block"></span>
+          P1 · High Value (Sprints 3–4)
+        </h4>
+        <ul>
+          <li>F-03 · No auto-pipeline on schedule</li>
+          <li>F-04 · 6 hollow stub views</li>
+          <li>F-05 · AI quota UX missing</li>
+          <li>F-06 · CommandCenter no daily brief</li>
+        </ul>
+      </div>
+      <div class="priority-quadrant" style="border-right:1px solid var(--border)">
+        <h4 style="color:#f59e0b">
+          <span style="width:8px;height:8px;background:#f59e0b;border-radius:50%;display:inline-block"></span>
+          P2 · Polish (Sprint 5)
+        </h4>
+        <ul>
+          <li>F-07 · No error/retry UI in AI calls</li>
+          <li>F-08 · TrendRadar shows no live data</li>
+          <li>F-09 · Sidebar quota badge missing</li>
+        </ul>
+      </div>
+      <div class="priority-quadrant">
+        <h4 style="color:#10b981">
+          <span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block"></span>
+          ✓ Resolved (v3 → v4)
+        </h4>
+        <ul>
+          <li>✓ Entitlements system (4 tiers)</li>
+          <li>✓ CreationStudio split (7 files)</li>
+          <li>✓ 44 tests passing</li>
+          <li>✓ Lazy-loading all 40+ views</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="gap-card critical">
+        <div class="gap-header">
+          <span class="gap-title">F-01 · localStorage-Only Persistence</span>
+          <span class="gap-impact high">P0 · Sprint 4</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> All creator data (ideas, scripts, analytics) lives in Zustand + localStorage. One browser wipe = permanent data loss.<br>
+          <strong>Impact:</strong> No cross-device access, no team collab, no backup. Blocks paying users.<br>
+          <strong>Fix:</strong> Dexie.js IndexedDB adapter + Supabase cloud sync in Sprint 4.
+        </p>
+      </div>
+
+      <div class="gap-card critical">
+        <div class="gap-header">
+          <span class="gap-title">F-02 · Demo Paywall — No Real Billing</span>
+          <span class="gap-impact high">P0 · Sprint 6</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> <code>canAccess()</code> and <code>PaywallModal</code> work correctly in UI but no payment processor is wired — upgrades are instant and free.<br>
+          <strong>Impact:</strong> Zero monetization. Product cannot generate revenue.<br>
+          <strong>Fix:</strong> Razorpay/Stripe integration with webhook-confirmed tier upgrades in Sprint 6.
+        </p>
+      </div>
+
+      <div class="gap-card critical">
+        <div class="gap-header">
+          <span class="gap-title">F-10 · No Real Auth (UI-Only SSO)</span>
+          <span class="gap-impact high">P0 · Sprint 6</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> AuthScreen has Google/Apple/Microsoft buttons but they're decorative. No session, no JWT, no user identity.<br>
+          <strong>Impact:</strong> No user accounts = no multi-device, no teams, no billing identity.<br>
+          <strong>Fix:</strong> Supabase Auth with Google OAuth provider in Sprint 6.
+        </p>
+      </div>
+
+      <div class="gap-card high">
+        <div class="gap-header">
+          <span class="gap-title">F-03 · No Auto-Pipeline on Schedule</span>
+          <span class="gap-impact medium">P1 · Sprint 3</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> Calendar events marked "publish" don't trigger any action. No publish queue, no scheduler, no pipeline push.<br>
+          <strong>Impact:</strong> "Autopilot" mode is completely non-functional as a core loop feature.<br>
+          <strong>Fix:</strong> <code>useScheduler</code> hook + ContentPipeline auto-move on publish date hit.
+        </p>
+      </div>
+
+      <div class="gap-card high">
+        <div class="gap-header">
+          <span class="gap-title">F-04 · 6 Hollow Stub Views</span>
+          <span class="gap-impact medium">P1 · Sprint 5</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> AutomationEngine, OpsHQ, CreatorStorefront, ContentABLab, AudienceLayer, CollabNetwork render placeholder UI with no functionality.<br>
+          <strong>Impact:</strong> 15% of navigation map is dead weight; undermines perceived product quality.<br>
+          <strong>Fix:</strong> Implement core interaction loop for each stub in Sprint 5.
+        </p>
+      </div>
+
+      <div class="gap-card high">
+        <div class="gap-header">
+          <span class="gap-title">F-05 · AI Quota UX Missing</span>
+          <span class="gap-impact medium">P1 · Sprint 3</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> <code>TIER_LIMITS.aiGenerationsPerMonth</code> is enforced in <code>APIProxy</code> but no meter, no warning toast, no upgrade nudge is shown in-app.<br>
+          <strong>Impact:</strong> Users hit quota wall with no explanation; looks like a bug.<br>
+          <strong>Fix:</strong> <code>useAIQuota()</code> hook + sidebar usage bar + toast warnings at 80%/100%.
+        </p>
+      </div>
+
+      <div class="gap-card high">
+        <div class="gap-header">
+          <span class="gap-title">F-06 · CommandCenter Lacks Daily Brief</span>
+          <span class="gap-impact medium">P1 · Sprint 3</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> The flagship "daily brief" card (AI-generated priorities) is missing from CommandCenter dashboard. Existing cards are static.<br>
+          <strong>Impact:</strong> The #1 differentiator in onboarding copy doesn't exist yet.<br>
+          <strong>Fix:</strong> <code>DailyBrief</code> component using <code>aiFetchBridge</code> with prompt built from store state.
+        </p>
+      </div>
+
+      <div class="gap-card medium">
+        <div class="gap-header">
+          <span class="gap-title">F-07 · No Error/Retry UI in AI Calls</span>
+          <span class="gap-impact medium">P2 · Sprint 5</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> When <code>aiFetchBridge</code> fails (rate limit, network), UI silently shows empty results or freezes.<br>
+          <strong>Impact:</strong> Feels broken; no recovery path shown to user.<br>
+          <strong>Fix:</strong> Shared <code>AIErrorState</code> component with retry button + exponential backoff.
+        </p>
+      </div>
+
+      <div class="gap-card medium">
+        <div class="gap-header">
+          <span class="gap-title">F-08 · TrendRadar Shows No Live Data</span>
+          <span class="gap-impact medium">P2 · Sprint 5</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> TrendRadar.tsx renders hardcoded mock trends. No API call to any trend source.<br>
+          <strong>Impact:</strong> "Trend detection" feature is decorative; provides no actual signal.<br>
+          <strong>Fix:</strong> Wire Claude AI prompt to synthesize trends from niche + platform context.
+        </p>
+      </div>
+
+      <div class="gap-card medium">
+        <div class="gap-header">
+          <span class="gap-title">F-09 · Sidebar AI Quota Badge Missing</span>
+          <span class="gap-impact medium">P2 · Sprint 3</span>
+        </div>
+        <p class="gap-description">
+          <strong>Problem:</strong> Sidebar has no persistent usage indicator. Quota consumption is invisible until hitting a wall.<br>
+          <strong>Impact:</strong> Users can't self-manage usage; leads to frustration and churn.<br>
+          <strong>Fix:</strong> Mini progress bar in sidebar footer showing X/Y AI credits used this month.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. NAVIGATION MAP                                         -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="navigation">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)">Navigation Map</div>
+      <h2>Complete View Architecture</h2>
+      <p>All 40+ views organized by navigation group with route IDs, min tier, and component status.</p>
+    </div>
+
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Nav Group</th>
+          <th>View Name</th>
+          <th>Route ID</th>
+          <th>Component</th>
+          <th>Min Tier</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3" style="color:#3b82f6;font-weight:700">Command</td>
+          <td>Command Center</td>
+          <td><span class="view-id">command-center</span></td>
+          <td>CommandCenter.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Idea Engine</td>
+          <td><span class="view-id">idea-engine</span></td>
+          <td>IdeaEngine.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Creator Autopilot</td>
+          <td><span class="view-id">autopilot</span></td>
+          <td>CreatorAutopilot.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td rowspan="5" style="color:#10b981;font-weight:700">Creation</td>
+          <td>Content Calendar</td>
+          <td><span class="view-id">calendar</span></td>
+          <td>ContentCalendar.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Daily Planner</td>
+          <td><span class="view-id">planner</span></td>
+          <td>DailyPlanner.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Creation Studio</td>
+          <td><span class="view-id">studio</span></td>
+          <td>CreationStudio/ (7 tabs)</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Split v4</span></td>
+        </tr>
+        <tr>
+          <td>Content Pipeline</td>
+          <td><span class="view-id">pipeline</span></td>
+          <td>ContentPipeline.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Content A/B Lab</td>
+          <td><span class="view-id">ab-lab</span></td>
+          <td>ContentABLab.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td rowspan="8" style="color:#f59e0b;font-weight:700">Intelligence</td>
+          <td>Analytics</td>
+          <td><span class="view-id">analytics</span></td>
+          <td>Analytics.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Trend Radar</td>
+          <td><span class="view-id">trends</span></td>
+          <td>TrendRadar.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge progress">⚠ F-08 Mock</span></td>
+        </tr>
+        <tr>
+          <td>Content DNA</td>
+          <td><span class="view-id">content-dna</span></td>
+          <td>ContentDNA.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Brand Deals</td>
+          <td><span class="view-id">brand-deals</span></td>
+          <td>BrandDeals.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Goals</td>
+          <td><span class="view-id">goals</span></td>
+          <td>Goals.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Income Tracker</td>
+          <td><span class="view-id">income</span></td>
+          <td>IncomeTracker.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Growth Simulator</td>
+          <td><span class="view-id">growth-sim</span></td>
+          <td>GrowthSimulator.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Audience Layer</td>
+          <td><span class="view-id">audience</span></td>
+          <td>AudienceLayer.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td rowspan="5" style="color:#a78bfa;font-weight:700">Workspace</td>
+          <td>Smart Inbox</td>
+          <td><span class="view-id">inbox</span></td>
+          <td>SmartInbox.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Projects</td>
+          <td><span class="view-id">projects</span></td>
+          <td>ProjectManager.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Chief of Staff</td>
+          <td><span class="view-id">chief-of-staff</span></td>
+          <td>CreatorChiefOfStaff.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Collab Network</td>
+          <td><span class="view-id">collab</span></td>
+          <td>CollabNetwork.tsx</td>
+          <td>Agency</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td>Creator CRM</td>
+          <td><span class="view-id">crm</span></td>
+          <td>CreatorCRM.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td rowspan="10" style="color:#f97316;font-weight:700">Production</td>
+          <td>Video Brief Studio</td>
+          <td><span class="view-id">video-brief</span></td>
+          <td>VideoBriefStudio.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Thumbnail Lab</td>
+          <td><span class="view-id">thumbnail-lab</span></td>
+          <td>ThumbnailLab.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Viral Clip Finder</td>
+          <td><span class="view-id">clip-finder</span></td>
+          <td>ViralClipFinder.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Brand Kit</td>
+          <td><span class="view-id">brand-kit</span></td>
+          <td>BrandKit.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Channel Audit</td>
+          <td><span class="view-id">audit</span></td>
+          <td>ChannelAudit.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Gear Guide</td>
+          <td><span class="view-id">gear-guide</span></td>
+          <td>GearGuide.tsx</td>
+          <td>Free</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Monetization</td>
+          <td><span class="view-id">monetize</span></td>
+          <td>MonetizationDashboard.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Engagement Lab</td>
+          <td><span class="view-id">engagement</span></td>
+          <td>EngagementLab.tsx</td>
+          <td>Creator</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Creator Storefront</td>
+          <td><span class="view-id">storefront</span></td>
+          <td>CreatorStorefront.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td>Automation Engine</td>
+          <td><span class="view-id">automation</span></td>
+          <td>AutomationEngine.tsx</td>
+          <td>Pro</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td rowspan="3" style="color:#ec4899;font-weight:700">Agency</td>
+          <td>CFO Suite</td>
+          <td><span class="view-id">cfo</span></td>
+          <td>CFODashboard.tsx</td>
+          <td>Agency</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+        <tr>
+          <td>Ops HQ</td>
+          <td><span class="view-id">ops-hq</span></td>
+          <td>OpsHQ.tsx</td>
+          <td>Agency</td>
+          <td><span class="status-badge todo">⚠ Stub</span></td>
+        </tr>
+        <tr>
+          <td>Client Portal</td>
+          <td><span class="view-id">client-portal</span></td>
+          <td>ClientPortal.tsx</td>
+          <td>Agency</td>
+          <td><span class="status-badge done">✓ Shipped</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. ONBOARDING FLOW                                        -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="onboarding">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(6,180,212,0.1);color:#06b6d4;border:1px solid rgba(6,180,212,0.2)">Onboarding Flow</div>
+      <h2>First-Time User Journey</h2>
+      <p>Two distinct onboarding paths: New Creator (with Niche Finder) vs. Growing Creator (direct to Command Center).</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(6,180,212,0.1)">⟡</div>
+        <div><h3>Onboarding Flow Diagram</h3><p>Complete user journey from landing to first value</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant A as AuthScreen
+    participant N as NicheFinder (NEW)
+    participant O as Onboarding
+    participant C as Command Center
+
+    U->>A: Lands on app
+    A->>A: Google/Apple/Microsoft SSO
+    A->>A: Guest mode fallback
+    A->>N: First-time user?
+    N->>N: 8-question quiz
+    N->>N: Calculate niche recommendations
+    N->>U: Show results
+    U->>N: Select niche
+    N->>O: Auto-fill profile
+    O->>O: Profile setup (niche, tone, goals)
+    O->>C: Complete onboarding
+    C->>C: Show Command Center
+    C->>U: First AI idea generation (wow moment)
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-track">
+      <div class="journey-item p1">
+        <div class="journey-item-header">
+          <h4>Step 1: Authentication</h4>
+          <span class="status-badge done">SHIPPED</span>
+        </div>
+        <p>AuthScreen with SSO buttons (Google, Apple, Microsoft) + guest mode fallback. Note: SSO currently UI-only; backend integration needed.</p>
+      </div>
+      <div class="journey-item p2">
+        <div class="journey-item-header">
+          <h4>Step 2: Niche Finder Quiz (MISSING)</h4>
+          <span class="status-badge todo">TODO</span>
+        </div>
+        <p>8-question interactive quiz for new creators. Questions cover topic expertise, platform preference, content style, time commitment, audience, goals, and income targets. Results show 3 niche recommendations with saturation scores.</p>
+      </div>
+      <div class="journey-item p1">
+        <div class="journey-item-header">
+          <h4>Step 3: Profile Setup</h4>
+          <span class="status-badge done">SHIPPED</span>
+        </div>
+        <p>Onboarding component collects niche, tone (6 options), content language (English/Hindi/Hinglish), and initial goals. Auto-filled if Niche Finder completed.</p>
+      </div>
+      <div class="journey-item p3">
+        <div class="journey-item-header">
+          <h4>Step 4: First AI Generation</h4>
+          <span class="status-badge progress">NEEDS FIX</span>
+        </div>
+        <p>Idea Engine generates first 5 AI-scored ideas. Note: Currently returns demo data without real API key. Real Claude integration needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. CONTENT CREATION FLOW                                  -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="content-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)">Content Creation Flow</div>
+      <h2>Idea → Calendar → Production → Publish</h2>
+      <p>The core loop: AI generates ideas, user schedules to calendar, produces content in studio, tracks through pipeline.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(16,185,129,0.1)">⟡</div>
+        <div><h3>Content Creation Flow</h3><p>From AI idea to published content</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+flowchart LR
+    A[Idea Engine] -->|AI generates 5 ideas| B[Idea Bank]
+    B -->|Drag or +Cal| C[Content Calendar]
+    C -->|Schedule date| D[Daily Planner]
+    D -->|Production task| E[Creation Studio]
+    E -->|Script/Caption/Hooks| F[Content Pipeline]
+    F -->|Move through stages| G[Published]
+    G -->|Log metrics| H[Analytics]
+    H -->|Performance data| I[Content DNA]
+    I -->|Voice patterns| A
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-steps" style="margin-top:24px">
+      <div class="flow-step">
+        <span class="step-label">Step 1</span>
+        <span class="step-name">Idea Engine</span>
+        <span class="step-sub">AI generates 5 scored ideas</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="step-label">Step 2</span>
+        <span class="step-name">Calendar</span>
+        <span class="step-sub">Schedule to specific date</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="step-label">Step 3</span>
+        <span class="step-name">Daily Planner</span>
+        <span class="step-sub">Time-block production</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="step-label">Step 4</span>
+        <span class="step-name">Studio</span>
+        <span class="step-sub">Write script, captions</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="step-label">Step 5</span>
+        <span class="step-name">Pipeline</span>
+        <span class="step-sub">Track production stages</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="step-label">Step 6</span>
+        <span class="step-name">Publish</span>
+        <span class="step-sub">Post to platform</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 7. PRODUCTION LAYER FLOW                                  -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="production-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(249,115,22,0.1);color:#f97316;border:1px solid rgba(249,115,22,0.2)">Production Layer Flow</div>
+      <h2>AI-Powered Content Production</h2>
+      <p>From raw idea to complete production package: scripts, thumbnails, clips, and brand-aligned visuals.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(249,115,22,0.1)">⟡</div>
+        <div><h3>Production Layer Architecture</h3><p>How production tools interconnect</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+flowchart TB
+    subgraph Input["Input Layer"]
+        Topic[Topic/Title]
+        DNA[Content DNA]
+        Brand[Brand Kit]
+    end
+
+    subgraph Process["Production Tools"]
+        VB[Video Brief Studio<br/>Hook + Script + Shots + Thumbnail]
+        TL[Thumbnail Lab<br/>CTR-optimized concepts]
+        CF[Viral Clip Finder<br/>Long-form → Shorts]
+        CA[Channel Audit<br/>Performance analysis]
+    end
+
+    subgraph Output["Output"]
+        Brief[Production Brief]
+        Thumb[Thumbnail Concepts]
+        Clips[Clip Timestamps]
+        Recs[Recommendations]
+    end
+
+    Input --> Process
+    Process --> Output
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 8. MONETIZATION FLOW                                      -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="monetize-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)">Monetization Flow</div>
+      <h2>Revenue Tracking & Brand Deals</h2>
+      <p>Track all income streams, manage brand sponsorship pipeline, and discover monetization opportunities.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(245,158,11,0.1)">⟡</div>
+        <div><h3>Monetization Intelligence Flow</h3><p>From income logging to revenue optimization</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+flowchart LR
+    A[Income Tracker] -->|Log revenue| B[Revenue Dashboard]
+    C[Brand Deals] -->|Sponsorship value| B
+    D[Affiliate Links] -->|Commission data| B
+    B -->|Calculate diversification| E[Monetization Score]
+    B -->|Identify gaps| F[Opportunity Alerts]
+    F -->|Recommendations| G[Rate Calculator]
+    G -->|What to charge| H[Brand Deal Pitches]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 9. WORKSPACE FLOW                                         -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="workspace-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)">Workspace Flow</div>
+      <h2>Projects, Tasks & Client Management</h2>
+      <p>Enterprise-grade project management for creators and agencies managing multiple campaigns.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(167,139,250,0.1)">⟡</div>
+        <div><h3>Workspace Architecture</h3><p>How projects, tasks, and client portal connect</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+flowchart TB
+    subgraph Projects["Projects Module"]
+        P1[Project Overview]
+        P2[Task Board]
+        P3[Milestones]
+        P4[Risks]
+    end
+
+    subgraph Tasks["Smart Tasks"]
+        T1[List View]
+        T2[Kanban Board]
+        T3[Timeline/Gantt]
+        T4[Eisenhower Matrix]
+    end
+
+    subgraph Client["Client Portal"]
+        C1[Shareable Link]
+        C2[Progress View]
+        C3[Comment System]
+    end
+
+    Projects --> Tasks
+    Projects --> Client
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 10. AI INTEGRATION FLOW                                   -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="ai-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">AI Integration Flow</div>
+      <h2>Multi-Provider AI Architecture</h2>
+      <p>How AI requests flow through the app, from user input to Claude/Gemini/OpenAI and back.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(236,72,153,0.1)">⟡</div>
+        <div><h3>AI Request Flow</h3><p>Current bridge architecture and target multi-provider flow</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+sequenceDiagram
+    participant C as Component
+    participant B as aiFetchBridge
+    participant P as APIProxy
+    participant S as Store (API Key)
+    participant AI as AI Provider
+
+    C->>B: fetch(api.anthropic.com)
+    B->>S: Get resolved API key
+    S-->>B: Return key (anthropic/gemini/openai)
+    B->>P: secureRequest('ai', 'anthropic-bridge')
+    P->>AI: POST /v1/messages
+    AI-->>P: Response with content
+    P-->>B: Wrapped response
+    B-->>C: Mock Response object
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(236,72,153,0.1)">🤖</div>
+          <h3 style="color:#ec4899">AI-Powered Features</h3>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Idea Generation</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Script Writing</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Caption Lab</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Video Briefs</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Thumbnail Concepts</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Clip Extraction</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Channel Audit</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Content DNA</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Trend Analysis</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Hashtag Strategy</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Hook Personalization</span>
+          <span class="feature-pill"><span class="dot" style="background:#ec4899"></span>Workflow Engine</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(59,130,246,0.1)">⚙️</div>
+          <h3 style="color:#3b82f6">AI Providers</h3>
+        </div>
+        <div>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>Anthropic Claude Haiku 4.5</span>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>Google Gemini (TODO)</span>
+          <span class="feature-pill"><span class="dot" style="background:#3b82f6"></span>OpenAI GPT-4 (TODO)</span>
+        </div>
+        <p style="font-size:11px;color:var(--text3);margin-top:12px">
+          <strong>Note:</strong> Currently only Anthropic is functional. Gemini and OpenAI integrations are planned in Phase 1.3.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 11. GROWTH INTELLIGENCE FLOW                              -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="growth-flow">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2)">Growth Intelligence</div>
+      <h2>Workflow Engine & Continuous Optimization</h2>
+      <p>Automated weekly growth loops: analyze → generate → schedule → produce → measure → optimize.</p>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-header">
+        <div class="icon" style="background:rgba(59,130,246,0.1)">⟡</div>
+        <div><h3>Weekly Growth Loop</h3><p>Automated workflow that runs weekly to optimize content strategy</p></div>
+      </div>
+      <div class="diagram-card-body">
+        <div class="mermaid">
+flowchart TB
+    A[Workflow Trigger<br/>Manual or Auto] --> B[Step 1: Gather Context]
+    B --> C[Step 2: Trend Analysis]
+    C --> D[Step 3: Generate Ideas]
+    D --> E[Step 4: Build 7-Day Plan]
+    E --> F[Create Calendar Posts]
+    E --> G[Create Smart Tasks]
+    F --> H[Content Production]
+    G --> H
+    H --> I[Publish & Log Metrics]
+    I --> J[Analytics & DNA Update]
+    J --> A
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 12. IMPLEMENTATION ROADMAP                                -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="roadmap">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)">Sprint Roadmap · v4.0</div>
+      <h2>4 Sprints to Production Ready</h2>
+      <p>Post-audit plan targeting all 10 flaws (F-01 through F-10). Sprints 1–2 (P0 foundation, entitlements, code split) are complete.</p>
+    </div>
+
+    <div class="roadmap">
+      <div class="roadmap-phase done">
+        <h4>
+          <span class="status-badge done">DONE</span>
+          Sprints 1–2: Foundation + P0/P1/P2 Fixes (v3 → v4)
+        </h4>
+        <p>40+ views shipped, entitlements system live, CreationStudio split into 7 subcomponents, 44 tests passing, lazy-loading all routes</p>
+        <div class="roadmap-tasks">
+          <div class="roadmap-task">✓ 40+ views across 5 layers</div>
+          <div class="roadmap-task">✓ Zustand + persist (base64, v5 store key)</div>
+          <div class="roadmap-task">✓ canAccess() + PaywallModal (4 tiers)</div>
+          <div class="roadmap-task">✓ TIER_LIMITS — agency.aiGenerationsPerMonth: Infinity</div>
+          <div class="roadmap-task">✓ CreationStudio/ 7-file split (shim re-export)</div>
+          <div class="roadmap-task">✓ React.lazy() + Suspense for all routes</div>
+          <div class="roadmap-task">✓ ErrorBoundary wrapping all views</div>
+          <div class="roadmap-task">✓ 44 Vitest tests (entitlements + creatorFlow)</div>
+          <div class="roadmap-task">✓ aiFetchBridge.ts intercept layer</div>
+          <div class="roadmap-task">✓ APIProxy.secureRequest() BFF simulation</div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase progress">
+        <h4>
+          <span class="status-badge progress">NEXT</span>
+          Sprint 3: Core Loop Completion — Fixes F-03, F-05, F-06, F-09
+        </h4>
+        <p>Close the content creation loop: auto-pipeline, AI quota visibility, daily brief, sidebar meter</p>
+        <div class="roadmap-tasks">
+          <div class="roadmap-task"><input type="checkbox"/> F-06 · DailyBrief component in CommandCenter (AI prompt from store state)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-05 · useAIQuota() hook — tracks usage against TIER_LIMITS</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-09 · Sidebar AI quota bar (progress ring, X/Y credits)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-03 · useScheduler hook — auto-move pipeline cards on publish date</div>
+          <div class="roadmap-task"><input type="checkbox"/> Toast warning at 80% and 100% quota exhaustion</div>
+          <div class="roadmap-task"><input type="checkbox"/> Upgrade nudge modal on quota hit for Free/Creator tiers</div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase todo">
+        <h4>
+          <span class="status-badge todo">TODO</span>
+          Sprint 4: Persistence Layer — Fixes F-01
+        </h4>
+        <p>Replace localStorage with Dexie.js IndexedDB + Supabase cloud sync</p>
+        <div class="roadmap-tasks">
+          <div class="roadmap-task"><input type="checkbox"/> F-01 · Dexie.js adapter for Zustand store (all collections)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-01 · Supabase Postgres sync (optimistic writes)</div>
+          <div class="roadmap-task"><input type="checkbox"/> Conflict resolution strategy (last-write-wins for MVP)</div>
+          <div class="roadmap-task"><input type="checkbox"/> Offline indicator + sync status badge</div>
+          <div class="roadmap-task"><input type="checkbox"/> Data export/import JSON utility</div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase todo">
+        <h4>
+          <span class="status-badge todo">TODO</span>
+          Sprint 5: Stub Completion + Polish — Fixes F-04, F-07, F-08
+        </h4>
+        <p>Implement 6 hollow stub views, error/retry UI, TrendRadar live data</p>
+        <div class="roadmap-tasks">
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · AutomationEngine — rule builder (trigger + action + condition)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · OpsHQ — agency ops dashboard (capacity, deadlines, KPIs)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · CreatorStorefront — digital product listing UI</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · ContentABLab — A/B variant manager + winner picker</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · AudienceLayer — segment builder + cohort view</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-04 · CollabNetwork — collab request + agency roster</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-07 · AIErrorState shared component (retry + backoff)</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-08 · TrendRadar — Claude prompt synthesizing niche trends</div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase todo">
+        <h4>
+          <span class="status-badge todo">TODO</span>
+          Sprint 6: Auth + Billing — Fixes F-02, F-10
+        </h4>
+        <p>Real authentication, real payments — turns MVP into a shippable product</p>
+        <div class="roadmap-tasks">
+          <div class="roadmap-task"><input type="checkbox"/> F-10 · Supabase Auth — Google OAuth provider</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-10 · JWT session management + protected routes</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-10 · User profile + team membership tables</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-02 · Razorpay integration (INR primary) + Stripe fallback</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-02 · Webhook-confirmed tier upgrades in Supabase</div>
+          <div class="roadmap-task"><input type="checkbox"/> F-02 · Subscription management page (cancel, upgrade, invoice)</div>
+          <div class="roadmap-task"><input type="checkbox"/> 14-day free trial flow for Creator tier</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 13. FEATURE MATRIX                                        -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="feature-matrix">
+    <div class="section-header">
+      <div class="section-tag" style="background:rgba(107,122,154,0.1);color:#6b7a9a;border:1px solid rgba(107,122,154,0.2)">Feature Matrix</div>
+      <h2>Complete Feature Reference</h2>
+      <p>All features organized by layer with implementation status and test coverage.</p>
+    </div>
+
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Layer</th>
+          <th>Status</th>
+          <th>AI-Powered</th>
+          <th>Tests</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Command Center</td>
+          <td>Command</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Daily dashboard</td>
+        </tr>
+        <tr>
+          <td>Idea Engine</td>
+          <td>Command</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>AI ideation + scoring</td>
+        </tr>
+        <tr>
+          <td>Content Calendar</td>
+          <td>Creation</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Month view + festival markers</td>
+        </tr>
+        <tr>
+          <td>Daily Planner</td>
+          <td>Creation</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Time-block scheduler</td>
+        </tr>
+        <tr>
+          <td>Creation Studio</td>
+          <td>Creation</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>7 tabs: Script/Caption/Carousel/Repurpose/Hashtags/Hooks/Chapters</td>
+        </tr>
+        <tr>
+          <td>Content Pipeline</td>
+          <td>Creation</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>6-stage Kanban</td>
+        </tr>
+        <tr>
+          <td>Analytics</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Manual logging (API needed)</td>
+        </tr>
+        <tr>
+          <td>Trend Radar</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Trend detection + angles</td>
+        </tr>
+        <tr>
+          <td>Content DNA</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Voice analysis (needs real data)</td>
+        </tr>
+        <tr>
+          <td>Brand Deals</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Sponsorship CRM</td>
+        </tr>
+        <tr>
+          <td>Goals</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>AI growth plans</td>
+        </tr>
+        <tr>
+          <td>Income Tracker</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>+ Affiliate Links tab</td>
+        </tr>
+        <tr>
+          <td>Templates</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Framework library</td>
+        </tr>
+        <tr>
+          <td>Visual Prompts</td>
+          <td>Intelligence</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>AI image prompts</td>
+        </tr>
+        <tr>
+          <td>Smart Inbox</td>
+          <td>Workspace</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>AI-triaged notifications</td>
+        </tr>
+        <tr>
+          <td>Projects</td>
+          <td>Workspace</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Enterprise PM + Client Portal</td>
+        </tr>
+        <tr>
+          <td>Smart Tasks</td>
+          <td>Workspace</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>4 views: List/Board/Timeline/Matrix</td>
+        </tr>
+        <tr>
+          <td>Video Brief Studio</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Full production package</td>
+        </tr>
+        <tr>
+          <td>Thumbnail Lab</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>CTR optimization</td>
+        </tr>
+        <tr>
+          <td>Viral Clip Finder</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Long-form → Shorts</td>
+        </tr>
+        <tr>
+          <td>Brand Kit</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Visual identity management</td>
+        </tr>
+        <tr>
+          <td>Channel Audit</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>AI channel analysis</td>
+        </tr>
+        <tr>
+          <td>Gear Guide</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Budget equipment recs</td>
+        </tr>
+        <tr>
+          <td>Monetization Dashboard</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Revenue intelligence</td>
+        </tr>
+        <tr>
+          <td>Engagement Lab</td>
+          <td>Production</td>
+          <td><span class="status-badge done">Shipped</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Comment mining + reply lab</td>
+        </tr>
+        <tr>
+          <td>Niche Finder Quiz</td>
+          <td>Onboarding</td>
+          <td><span class="status-badge critical">MISSING</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>8-question acquisition funnel</td>
+        </tr>
+        <tr>
+          <td>Content Repurposing Engine</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Creator CRM</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Competitor Radar</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Growth Simulator</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Pre-Publish Optimizer</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Content A/B Lab</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Creator Autopilot</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Creator Chief of Staff</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>Invoice Generator</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+        <tr>
+          <td>CollabMode</td>
+          <td>Advanced</td>
+          <td><span class="status-badge progress">Untested</span></td>
+          <td><span class="check">✓</span></td>
+          <td>—</td>
+          <td>Needs verification</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+  // Initialize mermaid
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#3b82f6',
+      primaryTextColor: '#f0f4ff',
+      primaryBorderColor: '#3b82f6',
+      lineColor: '#6b7a9a',
+      secondaryColor: '#ec4899',
+      tertiaryColor: '#a78bfa'
+    }
+  });
+
+  // Scroll spy for sidebar navigation
+  const sections = document.querySelectorAll('.section, .hero');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-100px 0px -60% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => observer.observe(section));
+
+  // Fade-in animation on scroll
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section').forEach(section => {
+    fadeObserver.observe(section);
+  });
+</script>
+
+</body>
+</html>
